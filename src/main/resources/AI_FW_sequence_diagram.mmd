@@ -1,0 +1,64 @@
+sequenceDiagram
+    autonumber
+    participant C as Client / Internal App
+    participant CB as Chat Bot App
+    participant LB as Load Balancer
+    participant RL as Rate Limiter
+    participant GW as API FW GW (xN)
+    participant CC as Config Cache
+    participant PC as Prompt Cache
+    participant M1 as Model Prompt Injection
+    participant M2 as Model PII
+    participant M3 as Model Jailbreak
+    participant DMS as Data Masking Service
+    participant LLM as External LLM(s)
+    participant MB as Message Bus
+    participant SP as Statistics Processor
+    participant SDB as Statistics DB
+
+    C->>CB: send prompt
+    CB->>LB: forward request
+    LB->>RL: route request
+    RL->>GW: forward (rate OK)
+
+    GW->>CC: get customer config
+    CC-->>GW: config (cache hit)
+
+    Note over GW,PC: Cache hit path — prompt already scanned
+    GW->>PC: lookup hash(customer+prompt)
+    PC-->>GW: verdict: PASS (cache hit)
+    GW-->>CB: cached PASS — skip to DMS
+    Note over GW: Skip models entirely
+
+    Note over GW,PC: Cache miss path — prompt not seen before
+    GW->>PC: lookup hash(customer+prompt)
+    PC-->>GW: miss
+
+    par Parallel model scanning
+        GW->>M1: scan(prompt)
+    and
+        GW->>M2: scan(prompt)
+    and
+        GW->>M3: scan(prompt)
+    end
+
+    M1-->>GW: PASS
+    M2-->>GW: PASS
+    M3-->>GW: PASS
+
+    GW->>PC: cache verdict PASS
+
+    GW->>DMS: sanitize(prompt, config_rules)
+    DMS->>CC: get masking rules
+    CC-->>DMS: rules
+    DMS-->>GW: sanitized prompt + masking metadata
+
+    GW->>LLM: forward sanitized prompt
+    LLM-->>GW: response
+
+    GW-->>CB: response
+    CB-->>C: response
+
+    GW-)MB: emit request event (async)
+    MB-)SP: consume event
+    SP-)SDB: persist statistics

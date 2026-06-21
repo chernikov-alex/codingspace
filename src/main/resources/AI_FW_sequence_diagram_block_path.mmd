@@ -1,0 +1,61 @@
+sequenceDiagram
+    autonumber
+    participant C as Client / Internal App
+    participant CB as Chat Bot App
+    participant LB as Load Balancer
+    participant RL as Rate Limiter
+    participant GW as API FW GW (xN)
+    participant CC as Config Cache
+    participant PC as Prompt Cache
+    participant M1 as Model Prompt Injection
+    participant M2 as Model PII
+    participant M3 as Model Jailbreak
+    participant MB as Message Bus
+    participant SP as Statistics Processor
+    participant SDB as Statistics DB
+
+    C->>CB: send prompt
+    CB->>LB: forward request
+    LB->>RL: route request
+    RL->>GW: forward (rate OK)
+
+    GW->>CC: get customer config
+    CC-->>GW: config (cache hit)
+
+    GW->>PC: lookup hash(customer+prompt)
+    PC-->>GW: miss
+
+    Note over GW: Start global request timer
+
+    par Parallel model scanning
+        GW->>M1: scan(prompt)
+    and
+        GW->>M2: scan(prompt)
+    and
+        GW->>M3: scan(prompt)
+    end
+
+    Note over GW,CB: Progress notification path
+    Note over GW: Global timer threshold exceeded<br/>verdict not yet received
+    GW-->>CB: "Request is taking longer than expected,<br/>please wait..."
+    CB-->>C: progress notification (SSE)
+
+    Note over GW,M1: Early termination — first BLOCK wins
+    M1-->>GW: BLOCK (prompt injection detected)
+
+    break model returned BLOCK
+        GW->>M2: cancel
+        GW->>M3: cancel
+        GW->>PC: cache verdict BLOCK
+        GW-->>CB: 403 — blocked: prompt injection
+        CB-->>C: block reason shown in UI
+    end
+
+    GW-)MB: emit block event (async)
+    MB-)SP: consume event
+    SP-)SDB: persist block statistics
+
+    Note over GW,SDB: Rate limit exceeded path
+    RL-->>CB: 429 — rate limit exceeded
+    CB-->>C: rate limit error
+

@@ -1,0 +1,8 @@
+flowchart TB
+    A[Start] -- Schedule to update--> B(Check intersection with existing schedules)
+    B --> C{Evaluate, in case of intersections return the intersecting schedules}
+    C -- No intersect --> D[Update the schedule]
+    C -- Intersect with self original schedule only --> D[Update the schedule]
+    C -- Intersect others --> E[Intersect with other schedules] --> G{Check new priority compared to others}
+    G -- New priority higher than all others --> I[Delete other schedules, update the new schedule]
+    G -- New priority lower than one of others --> H[Return result with the indication what's impossible]

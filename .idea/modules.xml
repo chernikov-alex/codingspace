@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ExpiringCounter_Alex.iml" filepath="$PROJECT_DIR$/ExpiringCounter_Alex.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/codingspace.iml" filepath="$PROJECT_DIR$/.idea/codingspace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/codingspace.iml" filepath="$PROJECT_DIR$/codingspace.iml" />
     </modules>
   </component>
 </project>

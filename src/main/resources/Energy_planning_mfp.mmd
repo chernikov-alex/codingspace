@@ -1,0 +1,64 @@
+sequenceDiagram
+actor Insight
+participant API_Gateway
+participant Vehicle_Manager
+participant DMS
+participant DB
+
+    %% Calculate Energy Planning Flow
+    %% @PostMapping(value = "/{siteId}/actions/calculate-planning"
+
+    %% Validate
+    %% setHeader(HTTP_PATH, simple("/sites/${header.siteId}/schedule/actions/simulate-validation"))
+    Insight->>+API_Gateway: calculatePlanning(schedule_records)
+    %% @PostMapping(value = "/{siteId}/schedule/actions/simulate-validation",
+    API_Gateway->>+Vehicle_Manager: [1] validate(schedule_records)
+    Vehicle_Manager->>+DB: fetch records for overlap checking (vehicle_schedule)
+    DB-->>-Vehicle_Manager: Successful fetch
+    Vehicle_Manager-->>-API_Gateway: Validation response
+    
+    %% enrich
+    %% .setHeader(HTTP_PATH, simple("/vehicles-schedule/enrich"))
+    API_Gateway->>+DMS: [2] enrich
+    %% @PostMapping("/vehicles-schedule/enrich")
+    DMS->>+DB: fetch records for enrichment
+    DB->>-DMS: Successful fetch
+    DMS-->>-API_Gateway: Succesfull enriched data 
+
+    %% Assign reservation
+    %% .setHeader(HTTP_PATH, simple("/v1/energy-planning/sites/${header.siteId}/create-reservation"))
+    API_Gateway->>+DMS: [3] AssignReservation(enriched_schedule_records) 
+    %% changed from @PostMapping(value = "/sites/{siteId}/create-reservation",
+    %% to @PostMapping(value = "/energy-planning/sites/{siteId}/create-reservation",
+    DMS->>+DB: Save reservations
+    DB-->>-DMS: Saved Successful Reservation
+    %% include failed reservations to the gateway response
+    DMS-->>-API_Gateway: ReservationResponse 
+
+    %% Save Successful Records
+    %% .setHeader(HTTP_PATH, simple("/sites/${header.siteId}/actions/reserved-schedule"))
+    API_Gateway->>+Vehicle_Manager: [4a] Save Successful Reservation Only
+    %% @PostMapping(value = "/{siteId}/actions/reserved-schedule",
+    Vehicle_Manager->>+DB: Save Successful Reservation Only
+    DB-->>-Vehicle_Manager: Successful save reservation
+    Vehicle_Manager->>-API_Gateway: Successfull 
+
+    %% Delete failed Reservations
+    %% .setHeader(HTTP_PATH, simple("/sites/${header.siteId}/actions/delete-schedule"))
+    API_Gateway->>+Vehicle_Manager: [4b] Delete failed reservations from DB
+    %% @PostMapping(value = "/{siteId}/actions/delete-schedule",
+    Vehicle_Manager->>+DB: Delete failed reservations from DB
+    DB-->>-Vehicle_Manager: Successful delete reservation
+    Vehicle_Manager->>-API_Gateway: Successfull 
+
+
+    %% Calculate Planning
+    %% API_Gateway : /calculate-energy-planning
+    API_Gateway->>+DMS: [5] Calculate Planning
+    %% DMS : changed from @PostMapping(value = "/sites/{siteId}/calculate-energy-planning"
+    %% to @PostMapping(value = "/energy-planning/sites/{siteId}/calculate-energy-planning",
+    DMS->>+DB: Fetch energy data needed for calculation (do not need to touch)
+    DB-->>-DMS: Response Fetch energy data needed for calculation (do not need to touch)
+    DMS-->>-API_Gateway: Energy Planning Response
+    API_Gateway-->>-Insight: Energy Planning Response
+    
