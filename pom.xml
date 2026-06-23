@@ -13,6 +13,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>ExpiringCounter_Alex</module>
+        <module>document</module>
+        <module>classification</module>
+        <module>minesweeper</module>
+        <module>data</module>
+        <module>topology</module>
     </modules>
 
     <properties>
