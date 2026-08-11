@@ -2,7 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/ExpiringCounter_Alex/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/classification/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/document/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/minesweeper/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/topology/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/workflow/src/main/java" charset="UTF-8" />
   </component>
 </project>
