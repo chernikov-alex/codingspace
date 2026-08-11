@@ -1,4 +1,4 @@
-package com.workflow.model;
+package com.workflow;
 
 /**
  * One entry in the execution output log.

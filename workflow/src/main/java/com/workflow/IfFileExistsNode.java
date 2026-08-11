@@ -1,6 +1,7 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
+import com.workflow.nodes.WorkflowNode;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

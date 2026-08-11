@@ -1,7 +1,8 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
 import com.workflow.model.WorkflowRuntimeException;
+import com.workflow.nodes.WorkflowNode;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

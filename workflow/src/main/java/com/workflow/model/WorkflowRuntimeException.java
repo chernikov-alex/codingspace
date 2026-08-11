@@ -1,4 +1,4 @@
-package com.workflow;
+package com.workflow.model;
 
 /**
  * Thrown when a node encounters an unrecoverable condition during execution:

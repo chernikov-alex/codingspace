@@ -1,7 +1,8 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
 import com.workflow.model.WorkflowRuntimeException;
+import com.workflow.nodes.WorkflowNode;
 
 /**
  * Calls an external HTTP service and stores the response body

@@ -1,4 +1,6 @@
-package com.workflow;
+package com.workflow.model;
+
+import com.workflow.OutputEntry;
 
 import java.util.List;
 

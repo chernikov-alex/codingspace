@@ -1,5 +1,6 @@
-package com.workflow;
+package com.workflow.executor;
 
+import com.workflow.model.ExecutionResult;
 import com.workflow.model.*;
 import com.workflow.nodes.WorkflowNode;
 

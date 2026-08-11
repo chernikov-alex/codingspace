@@ -1,7 +1,8 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
 import com.workflow.model.ExitState;
+import com.workflow.nodes.WorkflowNode;
 
 /**
  * Terminal node — sets the exit state on the context and signals the executor

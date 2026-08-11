@@ -22,6 +22,49 @@ import com.workflow.nodes.*;
  * Run 1: mock returns "hot"  → TRUE  branch → success
  * Run 2: mock returns "cold" → FALSE branch → failure
  */
+
+/**
+ * input example:
+ * {
+ *   "workflow_id": "wf_abc123",
+ *   "nodes": {
+ *     "n1": {
+ *       "type": "call_service",
+ *       "params": { "url": "weather.com/forecast", "variable": "weather" },
+ *       "on_true": "n2",
+ *       "on_false": null
+ *     },
+ *     "n2": {
+ *       "type": "if_equals",
+ *       "params": { "left": "$weather.status", "right": "ok" },
+ *       "on_true": "n3",
+ *       "on_false": "n_exit_fail"
+ *     },
+ *     "n3": {
+ *       "type": "print",
+ *       "params": { "value": "$weather" },
+ *       "on_true": "n_exit_ok",
+ *       "on_false": null
+ *     },
+ *     "n_exit_ok": { "type": "exit", "params": { "status": "success" }, "on_true": null, "on_false": null },
+ *     "n_exit_fail": { "type": "exit", "params": { "status": "failure", "message": "bad weather status" }, "on_true": null, "on_false": null }
+ *   },
+ *   "entry_node": "n1"
+ * }
+ *
+ * output example
+ * {
+ *   "execution_id": "exec_xyz",
+ *   "workflow_id": "wf_abc123",
+ *   "status": "success",
+ *   "exit_message": null,
+ *   "outputs": [
+ *     { "node_id": "n3", "type": "print", "value": "sunny, 24°C" }
+ *   ],
+ *   "trace": ["n1", "n2", "n3", "n_exit_ok"],
+ *   "error": null
+ * }
+ */
 public class Main {
 
     public static void main(String[] args) {

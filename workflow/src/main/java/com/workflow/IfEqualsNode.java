@@ -1,7 +1,7 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
-import com.workflow.model.WorkflowRuntimeException;
+import com.workflow.nodes.WorkflowNode;
 
 /**
  * Compares two operands for equality.

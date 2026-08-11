@@ -1,4 +1,4 @@
-package com.workflow;
+package com.workflow.model;
 
 /**
  * Terminal state of a workflow execution.

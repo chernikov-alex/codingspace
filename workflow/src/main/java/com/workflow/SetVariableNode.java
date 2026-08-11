@@ -1,6 +1,7 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
+import com.workflow.nodes.WorkflowNode;
 
 /**
  * Sets a variable in the global execution context.

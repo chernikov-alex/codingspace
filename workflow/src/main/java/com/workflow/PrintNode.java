@@ -1,6 +1,7 @@
-package com.workflow.nodes;
+package com.workflow;
 
 import com.workflow.model.ExecutionContext;
+import com.workflow.nodes.WorkflowNode;
 
 /**
  * Appends a value to the execution output log (returned to the UI).

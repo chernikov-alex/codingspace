@@ -1,4 +1,4 @@
-package com.workflow;
+package com.workflow.nodes;
 
 import com.workflow.model.ExecutionContext;
 

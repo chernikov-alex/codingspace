@@ -18,6 +18,7 @@
         <module>minesweeper</module>
         <module>data</module>
         <module>topology</module>
+        <module>workflow</module>
     </modules>
 
     <properties>
